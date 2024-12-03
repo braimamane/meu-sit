@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de JavaScript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .quiz-container {
+            width: 50%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+        }
+
+        .result h2 {
+            font-size: 24px;
+        }
+
+        #score {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>Quiz de JavaScript</h1>
+        <form id="quiz-form">
+            <div class="question">
+                <p>1. Qual é o tipo de dado usado para números inteiros em JavaScript?</p>
+                <label>
+                    <input type="radio" name="q1" value="number"> number
+                </label>
+                <label>
+                    <input type="radio" name="q1" value="int"> int
+                </label>
+                <label>
+                    <input type="radio" name="q1" value="string"> string
+                </label>
+            </div>
+
+            <div class="question">
+                <p>2. Como você cria uma função em JavaScript?</p>
+                <label>
+                    <input type="radio" name="q2" value="function name() {}"> function name() {}
+                </label>
+                <label>
+                    <input type="radio" name="q2" value="function = name() {}"> function = name() {}
+                </label>
+                <label>
+                    <input type="radio" name="q2" value="name() {}"> name() {}
+                </label>
+            </div>
+
+            <div class="question">
+                <p>3. O que é o 'localStorage' em JavaScript?</p>
+                <label>
+                    <input type="radio" name="q3" value="armazenamento local"> Armazenamento local do navegador
+                </label>
+                <label>
+                    <input type="radio" name="q3" value="armazenamento remoto"> Armazenamento remoto do servidor
+                </label>
+                <label>
+                    <input type="radio" name="q3" value="armazenamento de arquivos"> Armazenamento de arquivos no sistema
+                </label>
+            </div>
+
+            <div class="question">
+                <p>4. Qual é a forma correta de declarar uma variável em JavaScript?</p>
+                <label>
+                    <input type="radio" name="q4" value="let"> let
+                </label>
+                <label>
+                    <input type="radio" name="q4" value="const"> const
+                </label>
+                <label>
+                    <input type="radio" name="q4" value="var"> var
+                </label>
+            </div>
+
+            <div class="question">
+                <p>5. O que significa a sigla DOM?</p>
+                <label>
+                    <input type="radio" name="q5" value="Document Object Model"> Document Object Model
+                </label>
+                <label>
+                    <input type="radio" name="q5" value="Data Output Model"> Data Output Model
+                </label>
+                <label>
+                    <input type="radio" name="q5" value="Document Online Model"> Document Online Model
+                </label>
+            </div>
+
+            <button type="submit">Enviar Respostas</button>
+        </form>
+
+        <div id="result" class="result">
+            <h2>Resultado:</h2>
+            <p id="score"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('quiz-form');
+            const resultDiv = document.getElementById('result');
+            const scoreDisplay = document.getElementById('score');
+
+            // Função para armazenar o quiz no localStorage
+            function saveAnswers() {
+                const answers = {
+                    q1: document.querySelector('input[name="q1"]:checked')?.value,
+                    q2: document.querySelector('input[name="q2"]:checked')?.value,
+                    q3: document.querySelector('input[name="q3"]:checked')?.value,
+                    q4: document.querySelector('input[name="q4"]:checked')?.value,
+                    q5: document.querySelector('input[name="q5"]:checked')?.value,
+                };
+                localStorage.setItem('quizAnswers', JSON.stringify(answers));
+            }
+
+            // Função para calcular a pontuação
+            function calculateScore() {
+                const correctAnswers = {
+                    q1: 'number',
+                    q2: 'function name() {}',
+                    q3: 'armazenamento local',
+                    q4: 'let',
+                    q5: 'Document Object Model'
+                };
+
+                const storedAnswers = JSON.parse(localStorage.getItem('quizAnswers')) || {};
+
+                let score = 0;
+                let totalQuestions = Object.keys(correctAnswers).length;
+
+                // Comparar as respostas
+                for (let question in correctAnswers) {
+                    if (storedAnswers[question] === correctAnswers[question]) {
+                        score++;
+                    }
+                }
+
+                return score;
+            }
+
+            // Quando o formulário for enviado
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                saveAnswers(); // Salvar as respostas no localStorage
+                const score = calculateScore(); // Calcular a pontuação
+                resultDiv.style.display = 'block'; // Exibir o resultado
+                scoreDisplay.textContent = `Você acertou ${score} de 5 questões!`; // Exibir a pontuação
+            });
+        });
+    </script>
+
+</body>
+</html>
